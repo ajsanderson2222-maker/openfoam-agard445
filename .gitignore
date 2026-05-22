@@ -1,0 +1,20 @@
+# OpenFOAM time directories (but keep 0.org templates)
+[0-9]*/
+[0-9].[0-9]*/
+[0-9][0-9]*/
+!**/0.org/
+
+# Parallel decomposition
+processor*/
+
+# Logs
+log.*
+
+# ParaView state
+*.foam.py
+
+# postProcessing (large data)
+postProcessing/
+
+# snappy intermediate
+*.obj

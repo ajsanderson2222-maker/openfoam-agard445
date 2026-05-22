@@ -1,0 +1,13 @@
+#!/bin/bash
+cd "${0%/*}" || exit 1
+. /opt/openfoam13/etc/bashrc
+
+set -e
+
+blockMesh
+surfaceFeatures
+snappyHexMesh -overwrite
+createPatch -overwrite
+
+echo "Mesh complete."
+checkMesh

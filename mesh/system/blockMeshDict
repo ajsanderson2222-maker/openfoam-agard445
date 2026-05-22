@@ -1,0 +1,56 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  13                                    |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// Farfield box: +-10 m in x,y; z from 0 (symmetry) to 10 m (tip farfield)
+// Wing: chord 1.1785 m, span 0.762 m, root at x=0 z=0
+
+scale 1;
+
+vertices
+(
+    (-10 -10  0)   // 0
+    ( 10 -10  0)   // 1
+    ( 10  10  0)   // 2
+    (-10  10  0)   // 3
+    (-10 -10 10)   // 4
+    ( 10 -10 10)   // 5
+    ( 10  10 10)   // 6
+    (-10  10 10)   // 7
+);
+
+blocks
+(
+    hex (0 1 2 3 4 5 6 7) (40 40 20) simpleGrading (1 1 1)
+);
+
+boundary
+(
+    allBoundary
+    {
+        type patch;
+        faces
+        (
+            (0 3 2 1)   // z=0 bottom (will become symmetry)
+            (4 5 6 7)   // z=10 top
+            (0 1 5 4)   // y=-10
+            (3 7 6 2)   // y=+10
+            (0 4 7 3)   // x=-10
+            (1 2 6 5)   // x=+10
+        );
+    }
+);
+
+// ************************************************************************* //
