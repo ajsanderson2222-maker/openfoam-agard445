@@ -31,7 +31,7 @@ boundaryField
     }
     symmetry
     {
-        type            slip;
+        type            symmetryPlane;
     }
     "(wing)"
     {

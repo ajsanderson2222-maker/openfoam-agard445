@@ -31,7 +31,7 @@ boundaryField
     }
     symmetry
     {
-        type            zeroGradient;
+        type            symmetryPlane;
     }
     "(wing)"
     {
