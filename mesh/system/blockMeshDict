@@ -38,12 +38,20 @@ blocks
 
 boundary
 (
-    allBoundary
+    symmetry
+    {
+        type symmetryPlane;
+        faces
+        (
+            (0 3 2 1)   // z=0 bottom
+        );
+    }
+
+    farfield
     {
         type patch;
         faces
         (
-            (0 3 2 1)   // z=0 bottom (will become symmetry)
             (4 5 6 7)   // z=10 top
             (0 1 5 4)   // y=-10
             (3 7 6 2)   // y=+10

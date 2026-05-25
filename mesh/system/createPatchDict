@@ -2,8 +2,6 @@
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  13                                    |
-|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
-|    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
@@ -18,26 +16,6 @@ pointSync false;
 
 patches
 (
-    {
-        name        symmetry;
-        patchInfo
-        {
-            type symmetryPlane;
-        }
-        constructFrom patches;
-        patches ( allBoundary_0 );  // z=0 face from blockMesh
-    }
-
-    {
-        name        farfield;
-        patchInfo
-        {
-            type patch;
-        }
-        constructFrom patches;
-        patches ( allBoundary );
-    }
-
     {
         name redistributeHelper;
         patchInfo { type internal; }

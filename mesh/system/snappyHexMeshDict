@@ -20,10 +20,10 @@ addLayers       false;
 
 geometry
 {
-    64a004.stl
+    wing
     {
         type triSurfaceMesh;
-        file "64a004.stl";
+        file "wing.stl";
         name wing;
     }
 
@@ -44,10 +44,12 @@ castellatedMeshControls
     maxLoadUnbalance    0.10;
     nCellsBetweenLevels 3;
 
+    resolveFeatureAngle 30;
+
     features
     (
         {
-            file "64a004.eMesh";
+            file "wing.eMesh";
             level 5;
         }
     );
@@ -142,7 +144,6 @@ meshQualityControls
 writeFlags
 (
     scalarLevels
-    meshQuality
 );
 
 mergeTolerance 1e-6;

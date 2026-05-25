@@ -8,6 +8,4 @@ blockMesh
 surfaceFeatures
 snappyHexMesh -overwrite
 createPatch -overwrite
-
-echo "Mesh complete."
 checkMesh

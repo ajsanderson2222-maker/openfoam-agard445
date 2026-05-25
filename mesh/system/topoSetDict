@@ -2,23 +2,32 @@
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
 |  \\    /   O peration     | Version:  13                                    |
-|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
-|    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
     version     2.0;
     format      ascii;
     class       dictionary;
-    object      surfaceFeaturesDict;
+    object      topoSetDict;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-wing
-{
-    surfaces    ("wing.stl");
-    includedAngle 150;
-    writeObj    yes;
-}
+actions
+(
+    // Select all boundary faces at z=0 (symmetry plane)
+    {
+        name    symmetryFaces;
+        type    faceSet;
+        action  new;
+        source  boundaryToFace;
+    }
+    {
+        name    symmetryFaces;
+        type    faceSet;
+        action  subset;
+        source  boxToFace;
+        box     (-11 -11 -0.001) (11 11 0.001);
+    }
+);
 
 // ************************************************************************* //
