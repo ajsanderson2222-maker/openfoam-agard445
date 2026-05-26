@@ -49,6 +49,21 @@ Test point: Mach 1.072 (weakly supersonic), matching one of the Yates experiment
 
 Generated with snappyHexMesh on a structured blockMesh background.
 
+### Domain overview (XY slice at mid-span, Z=0.38 m)
+![Domain slice](images/mesh_domain_slice.png)
+
+### Wing region close-up (XY slice at Z=0.30 m)
+![Wing close-up](images/mesh_wing_closeup.png)
+
+### Spanwise slice (XZ plane at Y=0)
+![XZ slice](images/mesh_xz_slice.png)
+
+### 3D farfield domain
+![Domain 3D](images/mesh_domain_3d.png)
+
+### Wing surface mesh
+![Wing 3D](images/mesh_wing_3d.png)
+
 **Background block:** −10 m to +10 m in X and Y, 0 to 10 m in Z (half-domain, symmetry at Z=0).
 
 **Refinement:**
