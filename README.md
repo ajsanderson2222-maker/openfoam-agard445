@@ -223,6 +223,10 @@ Four structural modes from Yates (1988) experimental GVT data. Stored in `modeSh
 
 All modal masses normalized to 1. Mode shapes are defined at discrete spanwise stations and interpolated onto the CFD mesh by `genModeShape.py`.
 
+![Mode shapes](images/mode_shapes.png)
+
+The plot shows normalised out-of-plane displacement at the leading and trailing edge for each mode. When leading and trailing edges track together (modes 1, 3) the motion is pure bending. When they diverge (modes 2, 4) torsion is present — the wing twists. Flutter is driven by the coupling between modes 1 (bending) and 2 (torsion): bending raises the tip angle of attack, torsion amplifies it, generating more lift that feeds back into bending. At the flutter boundary this loop becomes self-sustaining.
+
 ---
 
 ## Validation
