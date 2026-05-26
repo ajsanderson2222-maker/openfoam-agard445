@@ -150,7 +150,7 @@ hisa
 
 ### Phase 2 — Transient (Flutter)
 
-Coupled fluid–structure simulation. The wing mesh deforms each time step according to the modal equations of motion; aerodynamic pressure feeds back into the modal accelerations.
+Coupled fluid–structure simulation. Each time step: aerodynamic pressure loads the wing → structural equations of motion update modal amplitudes → wing surface displaces → CFD mesh deforms → repeat.
 
 ```
 cd simulation/transient/
@@ -160,9 +160,53 @@ hisa
 ```
 
 **Settings:**
-- Physical time integration
-- `maxDeltaT 2e-3` s (≈ 1/12 of mode-2 period at 38.2 Hz)
-- Mesh motion: `displacementLaplacian` with `inverseFaceDistance` diffusivity on wing patch
+- Physical time integration, `endTime 0.5` s
+- `maxDeltaT 2e-3` s (≈ 1/12 of mode-2 period at 38.2 Hz, ensures temporal resolution of flutter oscillation)
+- Initial `deltaT 5e-4` s for soft start-up
+
+#### Structural model — modal superposition
+
+Wing deformation is not computed from a full FEM solid. Instead it uses a **reduced-order modal model**: total displacement at any surface point is a sum of pre-computed mode shapes scaled by time-varying modal coordinates:
+
+```
+u(x,t) = φ₁(x)·q₁(t) + φ₂(x)·q₂(t) + φ₃(x)·q₃(t)
+```
+
+- **φᵢ(x)** — mode shape *i*: spatial displacement field at every wing surface point, pre-computed from Yates GVT data and interpolated onto the CFD mesh by `modeShape/genModeShape.py` → stored in `constant/modal/mode1–3`
+- **qᵢ(t)** — modal coordinate *i*: scalar amplitude, integrated forward in time each CFD step → stored/read from `uniform/modalVariables`
+
+#### Equations of motion
+
+Each time step, `libmodal.so` (hisa's modal solver) integrates the generalized equations of motion for the three modal coordinates simultaneously:
+
+```
+M·q̈ + C·q̇ + K·q = f(t)
+```
+
+| Symbol | Matrix | Values (diagonal, from Yates) |
+|--------|--------|-------------------------------|
+| M | `massMatrix` | 175.1 kg for all 3 modes (normalized) |
+| C | `dampingMatrix` | 421, 1680, 2128 N·s/m |
+| K | `stiffnessMatrix` | 6.3×10⁵, 1.0×10⁷, 1.6×10⁷ N/m |
+| f(t) | generalized aerodynamic force | integrated from CFD pressure on `wing` patch, projected onto each mode shape |
+
+The matrices are diagonal (modes are orthogonal), so the three modal equations are decoupled structurally — they couple only through the aerodynamic force term f(t), which contains contributions from all mode shapes simultaneously.
+
+The generalized force for mode *i* is:
+
+```
+fᵢ(t) = ∫_wing  p(x,t) · φᵢ(x) · n̂ dA
+```
+
+i.e. the surface integral of CFD pressure weighted by the mode shape displacement — computed by the `modalSolver` function object in `controlDict`.
+
+#### Mesh motion
+
+Wing surface points displace by `u(x,t)` each time step. Interior mesh points follow via a `displacementLaplacian` motion solver with `inverseFaceDistance` diffusivity: cells near the wing deform more, cells near the farfield barely move. This keeps mesh quality acceptable throughout the flutter oscillation.
+
+#### Flutter detection
+
+If the flow conditions are above the flutter boundary, modal amplitudes qᵢ(t) grow exponentially → divergent oscillation. Below the flutter boundary they decay. At the flutter point the oscillation is neutrally stable (constant amplitude). By running at several Mach numbers and dynamic pressures and observing whether q grows or decays, the flutter boundary is traced out and compared to Yates experimental data.
 
 ---
 
